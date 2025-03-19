@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Blocker</title>
+    <style>
+
+body {
+    width: 250px;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+}
+
+input, button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+button {
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <h2>Website Blocker</h2>
+    
+    <label>
+        <input type="checkbox" id="toggleBlocker">
+        Enable Blocker
+    </label>
+
+    <h3>Blocked Websites:</h3>
+    <ul id="blockedList"></ul>
+
+    <input type="text" id="siteInput" placeholder="Enter website (e.g. facebook.com)">
+    <button id="addSite">Add</button>
+
+    <script src="popup.js"></script>
+</body>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const blockedList = document.getElementById("blockedList");
+    const siteInput = document.getElementById("siteInput");
+    const addSiteButton = document.getElementById("addSite");
+    const toggleBlocker = document.getElementById("toggleBlocker");
+
+    chrome.storage.sync.get(["blockedSites", "blockerEnabled"], function (data) {
+        const blockedSites = data.blockedSites || [];
+        const blockerEnabled = data.blockerEnabled ?? true;
+
+        toggleBlocker.checked = blockerEnabled;
+        updateUI(blockedSites);
+    });
+
+    addSiteButton.addEventListener("click", function () {
+        const site = siteInput.value.trim();
+        if (site) {
+            chrome.storage.sync.get("blockedSites", function (data) {
+                let blockedSites = data.blockedSites || [];
+                if (!blockedSites.includes(site)) {
+                    blockedSites.push(site);
+                    chrome.storage.sync.set({ blockedSites }, function () {
+                        updateUI(blockedSites);
+                    });
+                }
+            });
+        }
+    });
+
+    toggleBlocker.addEventListener("change", function () {
+        chrome.storage.sync.set({ blockerEnabled: toggleBlocker.checked });
+    });
+
+    function updateUI(blockedSites) {
+        blockedList.innerHTML = "";
+        blockedSites.forEach((site, index) => {
+            let li = document.createElement("li");
+            li.textContent = site;
+            let removeButton = document.createElement("button");
+            removeButton.textContent = "Remove";
+            removeButton.addEventListener("click", function () {
+                blockedSites.splice(index, 1);
+                chrome.storage.sync.set({ blockedSites }, function () {
+                    updateUI(blockedSites);
+                });
+            });
+            li.appendChild(removeButton);
+            blockedList.appendChild(li);
+        });
+    }
+});
+
+</script>
+</html>
