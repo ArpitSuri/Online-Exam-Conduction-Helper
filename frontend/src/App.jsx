@@ -21,7 +21,16 @@ function App() {
                   This extension blocks access to certain websites and prevents tab switching and helps in conduction of online exams and tests.
 
                 </p>
-                <a   href='https://drive.google.com/drive/folders/11Kaa_2bh4CdICONnB-2RNskOGqa0KbWn?usp=sharing' target='_blank'>Get the Extension</a>
+                {/* <a   href='https://drive.google.com/drive/folders/11Kaa_2bh4CdICONnB-2RNskOGqa0KbWn?usp=sharing' target='_blank'>Get the Extension</a> */}
+
+                                <a
+                  className="group inline-block rounded-sm bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:ring-3 focus:outline-hidden"
+                  href='https://drive.google.com/drive/folders/11Kaa_2bh4CdICONnB-2RNskOGqa0KbWn?usp=sharing' target='_blank'
+                >
+                  <span className="block rounded-xs bg-white px-8 py-3 text-sm font-medium group-hover:bg-transparent">
+                    Download
+                  </span>
+                </a>
               </div>
             </div>
 
